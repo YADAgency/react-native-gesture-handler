@@ -1,8 +1,8 @@
 // Project: https://github.com/software-mansion/react-native-gesture-handler
 // TypeScript Version: 2.6.2
 
-declare module 'react-native-gesture-handler' {
-  import * as React from 'react';
+declare module "react-native-gesture-handler" {
+  import * as React from "react";
   import {
     Animated,
     FlatListProperties,
@@ -18,7 +18,8 @@ declare module 'react-native-gesture-handler' {
     ViewStyle,
     StyleProp,
     ViewProps,
-  } from 'react-native';
+    ThemeAttributeBackgroundPropType,
+  } from "react-native";
 
   /* GESTURE HANDLER STATE */
 
@@ -260,7 +261,8 @@ declare module 'react-native-gesture-handler' {
     ) => void;
   }
 
-  export interface TapGestureHandlerProperties extends GestureHandlerProperties {
+  export interface TapGestureHandlerProperties
+    extends GestureHandlerProperties {
     minPointers?: number;
     maxDurationMs?: number;
     maxDelayMs?: number;
@@ -272,12 +274,15 @@ declare module 'react-native-gesture-handler' {
     onHandlerStateChange?: (event: TapGestureHandlerStateChangeEvent) => void;
   }
 
-  export interface ForceTouchGestureHandlerProperties extends GestureHandlerProperties {
-    minForce?: number,
-    maxForce?: number,
-    feedbackOnActivation?: boolean,
+  export interface ForceTouchGestureHandlerProperties
+    extends GestureHandlerProperties {
+    minForce?: number;
+    maxForce?: number;
+    feedbackOnActivation?: boolean;
     onGestureEvent?: (event: ForceTouchGestureHandlerGestureEvent) => void;
-    onHandlerStateChange?: (event: ForceTouchGestureHandlerStateChangeEvent) => void;
+    onHandlerStateChange?: (
+      event: ForceTouchGestureHandlerStateChangeEvent
+    ) => void;
   }
 
   export interface LongPressGestureHandlerProperties
@@ -285,10 +290,13 @@ declare module 'react-native-gesture-handler' {
     minDurationMs?: number;
     maxDist?: number;
     onGestureEvent?: (event: LongPressGestureHandlerGestureEvent) => void;
-    onHandlerStateChange?: (event: LongPressGestureHandlerStateChangeEvent) => void;
+    onHandlerStateChange?: (
+      event: LongPressGestureHandlerStateChangeEvent
+    ) => void;
   }
 
-  export interface PanGestureHandlerProperties extends GestureHandlerProperties {
+  export interface PanGestureHandlerProperties
+    extends GestureHandlerProperties {
     /** @deprecated  use activeOffsetX*/
     minDeltaX?: number;
     /** @deprecated  use activeOffsetY*/
@@ -411,24 +419,47 @@ declare module 'react-native-gesture-handler' {
   > {}
 
   export interface ContainedTouchableProperties {
-    containerStyle?: StyleProp<ViewStyle>
+    containerStyle?: StyleProp<ViewStyle>;
   }
 
   export class TouchableHighlight extends React.Component<
     TouchableHighlightProperties | ContainedTouchableProperties
-    > {}
+  > {}
 
   export class TouchableNativeFeedback extends React.Component<
-    TouchableNativeFeedbackProperties | ContainedTouchableProperties
-    > {}
+    | Pick<
+        TouchableNativeFeedbackProperties,
+        Exclude<keyof TouchableNativeFeedbackProperties, "background">
+      >
+    | ContainedTouchableProperties
+    | {
+        background?:
+          | {
+              type: "Ripple";
+              color?: number;
+              borderless?: boolean;
+            }
+          | ThemeAttributeBackgroundPropType;
+      }
+  > {
+    static Ripple(
+      color: string,
+      borderless: boolean
+    ): {
+      type: "Ripple";
+      color?: number;
+      borderless?: boolean;
+    };
+    static canUseNativeForeground(): boolean;
+  }
 
   export class TouchableOpacity extends React.Component<
     TouchableOpacityProperties | ContainedTouchableProperties
-    > {}
+  > {}
 
   export class TouchableWithoutFeedback extends React.Component<
     TouchableWithoutFeedbackProperties | ContainedTouchableProperties
-    > {}
+  > {}
 
   /* GESTURE HANDLER WRAPPED CLASSES */
 
@@ -467,18 +498,22 @@ declare module 'react-native-gesture-handler' {
   ): React.ComponentType<P>;
 }
 
-declare module 'react-native-gesture-handler/Swipeable' {
-  import { Animated, StyleProp, ViewStyle } from 'react-native';
-  import { PanGestureHandlerProperties } from 'react-native-gesture-handler'
-  type SwipeableExcludes = Exclude<keyof PanGestureHandlerProperties, 'onGestureEvent' | 'onHandlerStateChange'>
+declare module "react-native-gesture-handler/Swipeable" {
+  import { Animated, StyleProp, ViewStyle } from "react-native";
+  import { PanGestureHandlerProperties } from "react-native-gesture-handler";
+  type SwipeableExcludes = Exclude<
+    keyof PanGestureHandlerProperties,
+    "onGestureEvent" | "onHandlerStateChange"
+  >;
 
-  interface SwipeableProperties extends Pick<PanGestureHandlerProperties, SwipeableExcludes> {
+  interface SwipeableProperties
+    extends Pick<PanGestureHandlerProperties, SwipeableExcludes> {
     friction?: number;
     leftThreshold?: number;
     rightThreshold?: number;
     overshootLeft?: boolean;
     overshootRight?: boolean;
-    overshootFriction?: number,
+    overshootFriction?: number;
     onSwipeableLeftOpen?: () => void;
     onSwipeableRightOpen?: () => void;
     onSwipeableOpen?: () => void;
@@ -527,18 +562,23 @@ declare module 'react-native-gesture-handler/Swipeable' {
   }
 }
 
-declare module 'react-native-gesture-handler/DrawerLayout' {
-  import { Animated, StatusBarAnimation, StyleProp, ViewStyle } from 'react-native';
+declare module "react-native-gesture-handler/DrawerLayout" {
+  import {
+    Animated,
+    StatusBarAnimation,
+    StyleProp,
+    ViewStyle,
+  } from "react-native";
 
-  export type DrawerPosition = 'left' | 'right';
+  export type DrawerPosition = "left" | "right";
 
-  export type DrawerState = 'Idle' | 'Dragging' | 'Settling';
+  export type DrawerState = "Idle" | "Dragging" | "Settling";
 
-  export type DrawerType = 'front' | 'back' | 'slide';
+  export type DrawerType = "front" | "back" | "slide";
 
-  export type DrawerLockMode = 'unlocked' | 'locked-closed' | 'locked-open';
+  export type DrawerLockMode = "unlocked" | "locked-closed" | "locked-open";
 
-  export type DrawerKeyboardDismissMode = 'none' | 'on-drag';
+  export type DrawerKeyboardDismissMode = "none" | "on-drag";
 
   export interface DrawerLayoutProperties {
     renderNavigationView: (
@@ -570,7 +610,9 @@ declare module 'react-native-gesture-handler/DrawerLayout' {
     velocity?: number;
   }
 
-  export default class DrawerLayout extends React.Component<DrawerLayoutProperties> {
+  export default class DrawerLayout extends React.Component<
+    DrawerLayoutProperties
+  > {
     openDrawer: (options?: DrawerMovementOptionType) => void;
     closeDrawer: (options?: DrawerMovementOptionType) => void;
   }

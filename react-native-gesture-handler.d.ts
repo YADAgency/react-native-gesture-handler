@@ -430,9 +430,7 @@ declare module "react-native-gesture-handler" {
     | Pick<
         TouchableNativeFeedbackProperties,
         Exclude<keyof TouchableNativeFeedbackProperties, "background">
-      >
-    | ContainedTouchableProperties
-    | {
+      > & {
         background?:
           | {
               type: "Ripple";
@@ -441,6 +439,7 @@ declare module "react-native-gesture-handler" {
             }
           | ThemeAttributeBackgroundPropType;
       }
+    | ContainedTouchableProperties
   > {
     static Ripple(
       color: string,
